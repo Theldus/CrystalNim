@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CrystalNim by Theldus</title>
+    <style>
+        canvas { 
+            border: 0px none; 
+            background: black; 
+            width: 888px;
+            height: 500px; 
+        }
+        #output {
+            width: 888px;
+            height: 140px;
+            margin: 0 auto;
+            font-family: 'Lucida Console', Monaco, monospace;
+            outline: none;
+        }
+    </style>
+  </head>
+  <body>    
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    <br>
+    <textarea id="output" rows="8"></textarea>
+    <script type='text/javascript'>
+        var Module = {
+            preRun: [],
+            postRun: [],
+            print: (function() {
+                var element = document.querySelector('#output');
+                if (element)
+                    element.value = '';
+                
+                return function(text) {
+                    if (arguments.length > 1)
+                        text = Array.prototype.slice.call(arguments).join(' ');
+                    
+                    console.log(text);
+                    if (element) {
+                        element.value += text + "\n";
+                        element.scrollTop = element.scrollHeight;
+                    }
+                };
+            })(),
+            printErr: function(text) {
+                if (arguments.length > 1)
+                    text = Array.prototype.slice.call(arguments).join(' ');
+                
+                console.error(text);
+            },
+            canvas: (function() {
+                var canvas = document.querySelector('#canvas');
+                canvas.addEventListener("webglcontextlost", function(e) {
+                    alert('WebGL context lost. You will need to reload the page.');
+                    e.preventDefault(); 
+                }, false);
+                return canvas;
+            })()};
+    </script>
+    {{{ SCRIPT }}}
+  </body>
+</html>
