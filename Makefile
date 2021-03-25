@@ -34,14 +34,19 @@ export PLATFORM ?= Linux
 # Paths
 #===================================================================
 
-export ROOTDIR       := $(CURDIR)
-export PLATDIR       := $(ROOTDIR)/platforms/
-export RAYLIBDIR_INC ?= /usr/local/include/
-export RAYLIBDIR_LIB ?= /usr/local/lib/
+RAYLIB_SRC   = $(CURDIR)/external/raylib/src
+RAYLIB_INST  = $(CURDIR)/external/raylib_install
+RAYLIB_INC  ?= $(RAYLIB_INST)/include
 
 #===================================================================
 # Rules
 #===================================================================
+
+.PHONY: all
+.PHONY: build
+.PHONY: build-target
+.PHONY: clean
+.PHONY: clean-target
 
 # General
 all: build
@@ -51,4 +56,4 @@ clean: clean-target
 #
 # Platform specific rules
 #
-include $(PLATDIR)/Makefile.$(PLATFORM)
+include $(CURDIR)/platforms/Makefile.$(PLATFORM)

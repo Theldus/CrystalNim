@@ -52,8 +52,8 @@
 # Paths
 #===================================================================
 
-INCLUDE = -I $(CURDIR)/include/ -I $(RAYLIBDIR_INC)
-SRC     = $(CURDIR)/
+RAYLIB_LIB  ?= $(RAYLIB_INST)/lib/libraylib_android.a
+INCLUDE      = -I $(CURDIR)/include/ -I $(RAYLIB_INC)
 
 # Android paths
 ANDROID_HOME        ?= /opt/android-sdk
@@ -139,7 +139,7 @@ LDFLAGS += -L. -L$(PROJECT_BUILD_PATH)/obj \
 	-L$(PROJECT_BUILD_PATH)/lib/$(ANDROID_ARCH_NAME)
 
 # Linker libraries
-LDLIBS   = -lm -lc -lraylib -llog -landroid -lEGL -lGLESv2 -lOpenSLES -ldl
+LDLIBS   = -lm -lc -llog -landroid -lEGL -lGLESv2 -lOpenSLES -ldl
 
 #===================================================================
 # Rules
@@ -154,7 +154,6 @@ $(PROJECT_BUILD_PATH)/obj/%.o:%.c
 	$(CC) -c $^ -o $@ $(INCLUDE) $(CFLAGS) --sysroot=$(ANDROID_TOOLCHAIN)/sysroot 
 
 build-target: create_temp_project_dirs \
-	copy_project_required_libs \
 	copy_project_resources \
 	generate_loader_script \
  	generate_android_manifest \
@@ -166,6 +165,22 @@ build-target: create_temp_project_dirs \
 	create_project_apk_package \
 	sign_project_apk_package \
 	zipalign_project_apk_package
+
+raylib-target: raylib
+
+# --------------------------------------------------
+raylib: $(RAYLIB_LIB)
+
+$(RAYLIB_LIB): $(RAYLIB_SRC)/Makefile
+	$(MAKE) -C $(RAYLIB_SRC) clean
+	$(MAKE) -C $(RAYLIB_SRC)/ PLATFORM=PLATFORM_ANDROID
+	$(MAKE) -C $(RAYLIB_SRC)/ install PLATFORM=PLATFORM_ANDROID PLATFORM_OS=LINUX\
+		DESTDIR=$(RAYLIB_INST)/
+	@mv $(RAYLIB_INST)/lib/libraylib.a $(RAYLIB_LIB)
+
+$(RAYLIB_SRC)/Makefile:
+	git submodule update --init
+# --------------------------------------------------
 
 # Create required temp directories for APK building
 create_temp_project_dirs:
@@ -182,10 +197,6 @@ create_temp_project_dirs:
 	  mkdir -p $(PROJECT_BUILD_PATH)/assets/$(PROJECT_RESOURCES_PATH); \
 	  $(foreach dir, $(PROJECT_SOURCE_DIRS), mkdir -p $(PROJECT_BUILD_PATH)/obj/$(dir) ); \
 	fi
-
-# Copy required libs for integration into APK
-copy_project_required_libs:
-	cp $(RAYLIBDIR_LIB)/libraylib.* $(PROJECT_BUILD_PATH)/lib/$(ANDROID_ARCH_NAME)
 
 # Copy project required resources: strings.xml, icon.png, assets
 copy_project_resources:
@@ -269,9 +280,9 @@ config_project_package:
 # Compile project code into a shared library:
 #     lib/lib$(PROJECT_LIBRARY_NAME).so 
 #
-compile_project_code: $(OBJS)
+compile_project_code: $(OBJS) $(RAYLIB_LIB)
 	$(CC) -o $(PROJECT_BUILD_PATH)/lib/$(ANDROID_ARCH_NAME)/lib$(PROJECT_LIBRARY_NAME).so \
-		$(OBJS) -shared $(INCLUDE) $(LDFLAGS) $(LDLIBS)
+		$^ -shared $(INCLUDE) $(LDFLAGS) $(LDLIBS)
 	$(STRIP) --strip-all $(PROJECT_BUILD_PATH)/lib/$(ANDROID_ARCH_NAME)/lib$(PROJECT_LIBRARY_NAME).so
 
 # Compile project .java code into .class (Java bytecode) 

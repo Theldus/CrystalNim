@@ -24,8 +24,8 @@
 # Paths
 #===================================================================
 
-INCLUDE = -I $(CURDIR)/include/ -I $(RAYLIBDIR_INC)
-SRC     = $(CURDIR)/
+RAYLIB_LIB  ?= $(RAYLIB_INST)/lib/libraylib_web.a
+INCLUDE      = -I $(CURDIR)/include/ -I $(RAYLIB_INC)
 
 #===================================================================
 # Flags
@@ -38,7 +38,6 @@ CFLAGS   += -D_DEFAULT_SOURCE -DWEB -Wno-missing-braces
 CFLAGS   += -s USE_GLFW=3 -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 \
 	--preload-file resources/
 CFLAGS   += --shell-file $(CURDIR)/platforms/shell.html
-LDLIBS   += $(RAYLIBDIR_LIB)/libraylib.a
 
 #===================================================================
 # Environment variables
@@ -53,6 +52,8 @@ export PATH    := $(EMSDK_PATH):$(EMSCRIPTEN_PATH):$(CLANG_PATH):$(PATH)
 # Rules
 #===================================================================
 
+.PHONY: raylib
+
 # Sources
 C_SRC = main.c scenes/ingame.c scenes/tutorial.c
 
@@ -64,10 +65,24 @@ OBJ = $(patsubst %.c, %.o, $(C_SRC))
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDE) -D$(PLATFORM)
 
 build-target: nim.html
+raylib-target: raylib
 
-nim.html: $(OBJ)
-	$(CC) -o $@ $(OBJ) $(CFLAGS) $(INCLUDE_PATHS) $(LDFLAGS) $(LDLIBS) \
-		-D$(PLATFORM)
+# --------------------------------------------------
+raylib: $(RAYLIB_LIB)
+
+$(RAYLIB_LIB): $(RAYLIB_SRC)/Makefile
+	$(MAKE) -C $(RAYLIB_SRC) clean
+	$(MAKE) -C $(RAYLIB_SRC)/ PLATFORM=PLATFORM_WEB
+	$(MAKE) -C $(RAYLIB_SRC)/ install PLATFORM=PLATFORM_WEB PLATFORM_OS=LINUX\
+		DESTDIR=$(RAYLIB_INST)/
+	@mv $(RAYLIB_INST)/lib/libraylib.a $(RAYLIB_LIB)
+
+$(RAYLIB_SRC)/Makefile:
+	git submodule update --init
+# --------------------------------------------------
+
+nim.html: $(OBJ) $(RAYLIB_LIB)
+	$(CC) $^ $(CFLAGS) $(INCLUDE_PATHS) $(LDFLAGS) -D$(PLATFORM) -o $@
 
 clean-target:
 	@rm -f $(CURDIR)/scenes/*.o

@@ -24,8 +24,8 @@
 # Paths
 #===================================================================
 
-INCLUDE = -I $(CURDIR)/include/ -I $(RAYLIBDIR_INC)
-SRC     = $(CURDIR)/
+RAYLIB_LIB  ?= $(RAYLIB_INST)/lib/libraylib_linux.a
+INCLUDE      = -I $(CURDIR)/include/ -I $(RAYLIB_INC)
 
 #===================================================================
 # Flags
@@ -34,12 +34,13 @@ SRC     = $(CURDIR)/
 CC       ?= gcc
 CFLAGS   += -Wall -Wextra -O3
 CFLAGS   += $(INCLUDE) -std=c99 -pedantic
-CFLAGS   += -L $(RAYLIBDIR_LIB)
-LDFLAGS  += -lraylib -ldl -pthread -lm
+LDFLAGS  += -ldl -pthread -lm
 
 #===================================================================
 # Rules
 #===================================================================
+
+.PHONY: raylib
 
 # Sources
 C_SRC = main.c scenes/ingame.c scenes/tutorial.c
@@ -52,8 +53,24 @@ OBJ = $(C_SRC:.c=.o)
 	$(CC) $< $(CFLAGS) -c -o $@
 
 build-target: nim
+raylib-target: raylib
 
-nim: $(OBJ)
+# --------------------------------------------------
+raylib: $(RAYLIB_LIB)
+
+$(RAYLIB_LIB): $(RAYLIB_SRC)/Makefile
+	$(MAKE) -C $(RAYLIB_SRC) clean
+	$(MAKE) -C $(RAYLIB_SRC)/ PLATFORM=PLATFORM_DESKTOP
+	$(MAKE) -C $(RAYLIB_SRC)/ install PLATFORM=PLATFORM_DESKTOP \
+		DESTDIR=$(RAYLIB_INST)/
+	@mv $(RAYLIB_INST)/lib/libraylib.a $(RAYLIB_LIB)
+
+$(RAYLIB_SRC)/Makefile:
+	git submodule update --init
+# --------------------------------------------------
+
+# Build game
+nim: $(OBJ) $(RAYLIB_LIB)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $@
 
 clean-target:
