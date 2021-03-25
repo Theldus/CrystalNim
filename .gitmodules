@@ -1,0 +1,4 @@
+[submodule "external/raylib"]
+	path = external/raylib
+	url = https://github.com/Theldus/raylib
+	branch = crystal_nim
