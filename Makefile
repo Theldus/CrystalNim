@@ -36,7 +36,7 @@ export PLATFORM ?= Linux
 
 RAYLIB_SRC   = $(CURDIR)/external/raylib/src
 RAYLIB_INST  = $(CURDIR)/external/raylib_install
-RAYLIB_INC  ?= $(RAYLIB_INST)/include
+RAYLIB_INC  ?= $(RAYLIB_SRC)
 
 #===================================================================
 # Rules
