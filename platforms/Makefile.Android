@@ -77,7 +77,7 @@ DEVICE_ASPECT_RATIO    ?= AR_19_9
 
 # Android configs
 ANDROID_API_VERSION    ?= 29
-ANDROID_ARCH           ?= ARM64
+ANDROID_ARCH           ?= arm64
 
 # Project
 PROJECT_NAME            = crystal_nim
@@ -105,7 +105,7 @@ APP_KEYSTORE_PASS = pleasechangeme
 #===================================================================
 
 # ARM 64 builds
-ifeq ($(ANDROID_ARCH),ARM64)
+ifeq ($(ANDROID_ARCH),arm64)
     CC = $(ANDROID_TOOLCHAIN)/bin/aarch64-linux-android$(ANDROID_API_VERSION)-clang
     AR = $(ANDROID_TOOLCHAIN)/bin/aarch64-linux-android-ar
     STRIP = $(ANDROID_TOOLCHAIN)/bin/aarch64-linux-android-strip
@@ -115,7 +115,7 @@ ifeq ($(ANDROID_ARCH),ARM64)
 endif
 
 # ARM v7 builds
-ifeq ($(ANDROID_ARCH),ARM)
+ifeq ($(ANDROID_ARCH),arm)
     CC = $(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-clang
     AR = $(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-ar
     STRIP = $(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-strip
