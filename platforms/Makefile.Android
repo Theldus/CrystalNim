@@ -57,8 +57,8 @@ INCLUDE      = -I $(CURDIR)/include/ -I $(RAYLIB_INC)
 
 # Android paths
 ANDROID_HOME        ?= /opt/android-sdk
-ANDROID_TOOLCHAIN   ?= /opt/android-ndk/toolchains/llvm/prebuilt/linux-x86_64/
 ANDROID_BUILD_TOOLS ?= $(ANDROID_HOME)/build-tools/29.0.3
+ANDROID_TOOLCHAIN    = $(ANDROID_NDK)/toolchains/llvm/prebuilt/linux-x86_64/
 
 #===================================================================
 # Android configuration
