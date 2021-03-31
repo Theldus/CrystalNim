@@ -60,6 +60,10 @@
 	#define TITLE         "Crystal Nim"
 	#define TITLE_BY_SIZE 20
 
+	/* Gear button and menu. */
+	#define GEAR_X       450
+	#define GEAR_Y        10
+
 	/* Tutorial. */
 	#define TUTORIAL_SIZE    (FONT_SIZE)
 	#define TUTORIAL_START_Y (START_Y)
@@ -81,8 +85,11 @@
 	#define STATE_FINISH   2
 
 	/* Sticks. */
-	#define MAX_STICKS    16
-	#define MAX_ROWS       4
+	#define DEFAULT_STICKS    16
+	#define MAX_STICKS_PER_ROW 7
+	#define MAX_ROWS           4
+	#define MAX_STICKS        (MAX_STICKS_PER_ROW * MAX_ROWS)
+	
 
 	/* Turns. */
 	#define PLAYER_TURN   0
@@ -112,6 +119,13 @@
 	extern int global_state;
 	extern Vector2 mouse;
 	extern int turn;
+	extern bool cb_rnd_amt_selected;
+
+	/* Gear. */
+	extern void init_gear(void);
+	extern void finish_gear(void);
+	extern void update_gear_logic(void);
+	extern void update_gear_drawing(void);
 
 	/* Tutorial. */
 	extern void init_tutorial(void);
@@ -120,6 +134,7 @@
 	extern void update_tutorial_drawing(void);
 
 	/* Ingame. */
+	extern void setup_crystals_amount(void);
 	extern void init_ingame(void);
 	extern void finish_ingame(void);
 	extern void update_ingame_logic(void);

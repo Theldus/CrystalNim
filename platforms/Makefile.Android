@@ -85,7 +85,7 @@ PROJECT_LIBRARY_NAME    = main
 PROJECT_BUILD_ID        = android
 PROJECT_BUILD_PATH      = $(PROJECT_BUILD_ID).$(PROJECT_NAME)
 PROJECT_RESOURCES_PATH  = resources/
-PROJECT_SOURCE_FILES    = main.c scenes/ingame.c scenes/tutorial.c
+PROJECT_SOURCE_FILES    = main.c scenes/gear.c scenes/ingame.c scenes/tutorial.c
 PROJECT_SOURCE_DIRS     = $(dir $(PROJECT_SOURCE_FILES))
 
 # Android app configuration variables

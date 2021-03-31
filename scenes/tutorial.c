@@ -82,7 +82,13 @@ void update_tutorial_logic(void)
 			turn = PLAYER_TURN;
 		else
 			turn = COMPUTER_TURN;
+
+		/* Initialize sticks amount. */
+		setup_crystals_amount();
 	}
+
+	/* Gear logic. */
+	update_gear_logic();
 }
 
 /**
@@ -110,4 +116,7 @@ void update_tutorial_drawing(void)
 			((Vector2){.x=rec_sel->x + rec_sel->width, .y=rec_sel->y +
 				rec_sel->height}), 2, BLUE);
 	}
+
+	/* Gear button & menu. */
+	update_gear_drawing();
 }

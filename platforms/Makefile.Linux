@@ -43,7 +43,7 @@ LDFLAGS  += -ldl -pthread -lm
 .PHONY: raylib
 
 # Sources
-C_SRC = main.c scenes/ingame.c scenes/tutorial.c
+C_SRC = main.c scenes/gear.c scenes/ingame.c scenes/tutorial.c
 
 # Objects
 OBJ = $(C_SRC:.c=.o)

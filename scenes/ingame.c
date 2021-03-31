@@ -508,6 +508,36 @@ static void logic_think(void)
 /* ---------------------------------------------------------------------- */
 
 /**
+ * Configure the crystals amount accordingly with the current
+ * state of the 'random amount'-checkbox.
+ */
+void setup_crystals_amount(void)
+{
+	int i;
+
+	/* Random selected. */
+	if (cb_rnd_amt_selected)
+	{
+		sticks_count = 0;
+		for (i = 0; i < MAX_ROWS; i++)
+		{
+			sticks[i] = GetRandomValue(1, 7);
+			sticks_count += sticks[i];
+		}
+	}
+
+	/* Default config. */
+	else
+	{
+		sticks_count  = DEFAULT_STICKS;
+		sticks[0]     = 1;
+		sticks[1]     = 3;
+		sticks[2]     = 5;
+		sticks[3]     = 7;
+	}
+}
+
+/**
  * Load in-game resources.
  */
 void init_ingame(void)
@@ -609,14 +639,10 @@ void update_ingame_logic(void)
 					crystal_col   = -1;
 					move_start_x  =  0;
 					move_step     =  0;
-					sticks_count  = MAX_STICKS;
-					sticks[0]     = 1;
-					sticks[1]     = 3;
-					sticks[2]     = 5;
-					sticks[3]     = 7;
 					state         = S_DEFAULT;
 					global_state  = STATE_TUTORIAL;
 					recalculate_crystal_clicks = -1;
+					setup_crystals_amount();
 				}
 			}
 			break;

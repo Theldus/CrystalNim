@@ -42,7 +42,7 @@ int sticks_count     = MAX_STICKS;
 /* Turn. */
 int turn;
 
-/* Background image. */
+/* Images. */
 Texture2D back;
 
 /* Program icon. */
@@ -125,6 +125,7 @@ int main(void)
 	icon = LoadImage("resources/crystal.png");
 	SetWindowIcon(icon);
 
+	init_gear();
 	init_tutorial();
 	init_ingame();
 
@@ -137,6 +138,8 @@ int main(void)
 
 	finish_ingame();
 	finish_tutorial();
+	finish_gear();
+	UnloadTexture(back);
 	UnloadImage(icon);
 	CloseWindow();
 }

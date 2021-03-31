@@ -55,7 +55,7 @@ export PATH    := $(EMSDK_PATH):$(EMSCRIPTEN_PATH):$(CLANG_PATH):$(PATH)
 .PHONY: raylib
 
 # Sources
-C_SRC = main.c scenes/ingame.c scenes/tutorial.c
+C_SRC = main.c scenes/gear.c scenes/ingame.c scenes/tutorial.c
 
 # Objects
 OBJ = $(patsubst %.c, %.o, $(C_SRC))
