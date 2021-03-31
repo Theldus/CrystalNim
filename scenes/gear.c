@@ -99,6 +99,8 @@ void update_gear_logic(void)
 {
 	if (IsClick())
 	{
+		mouse = GetMousePosition();
+
 		if (CheckCollisionPointRec(mouse, rec_gear))
 			gear_window = !gear_window;
 
