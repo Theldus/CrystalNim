@@ -160,7 +160,7 @@ static void computer_think(void)
 		 */
 
 		/* Scenario a). */
-		if (greater_than_one > 1)
+		if (greater_than_one != 1)
 		{
 			/* Update crystal_* vars. */
 			crystal_row = i;
